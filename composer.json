@@ -1,0 +1,22 @@
+{
+  "name": "jeffsocal/proxy-html",
+  "type": "library",
+  "description": "PHP implementation of Bootstrap v4",
+  "keywords": ["Boostrap"],
+  "homepage": "https://github.com/jeffsocal/proxy-html/",
+  "require": {
+    "php": ">=7.0.0"
+  },
+  "autoload": {
+    "psr-4": { "ProxyHTML\\": "src/" }
+  },
+  "authors": [
+    {
+      "name": "Jeff Jones",
+      "email": "jeff@socalbioinformatics.com",
+      "homepage": "https://github.com/jeffsocal",
+      "role": "Developer"
+    }
+  ],
+  "license": "MIT"
+}
