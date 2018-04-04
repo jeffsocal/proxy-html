@@ -15,44 +15,62 @@ class Roles extends Pages
 
     private $index_roles;
 
-    private $roles_json;
+    private $site_roles;
 
-    private $list_roles_by;
-
-    public function __construct()
+    public function __construct($role = 'Public')
     {
         parent::__construct();
         
         $ini = parse_ini_file('ini/config.ini');
-        $this->roles_json = $this->include_path . $ini['roles_json'];
-        $this->list_roles_by = $ini['list_roles_by'];
-    }
-
-    public function getRoles()
-    {
-        if ($this->list_roles_by == 'json')
-            return $this->getRolesByConfig();
+        $this->site_roles = explode(",", $ini['site_roles']);
         
-        return $this->getRolesByInference();
+        $this->indexRolePages($role);
     }
 
-    private function getRolesByInference()
+    public function getPagePath($page)
+    {
+        if (is_null($page))
+            $page = $this->getDefaultPage();
+        
+        if (! key_exists($page, $this->index_roles))
+            $page = $this->getDefaultPage();
+        
+        if (! file_exists($this->include_path . $this->index_roles[$page]))
+            $page = $this->getDefaultPage();
+        
+        return $this->include_path . $this->index_roles[$page];
+    }
+
+    public function getPageVariable($page)
+    {
+        if (is_null($page))
+            $page = $this->getDefaultPage();
+        
+        if (! key_exists($page, $this->index_roles))
+            return "404";
+        
+        if (! file_exists($this->include_path . $this->index_roles[$page]))
+            return "404";
+        
+        return $page;
+    }
+
+    protected function getRolePages()
+    {
+        return $this->index_roles;
+    }
+
+    private function indexRolePages($role = 'Public')
     {
         $pages = $this->getPages();
         $roles = array();
-        foreach ($pages as $name => $path) {
-            $role = str_replace($this->path_pages, '', $path);
-            $role = preg_replace("/\/.+\.php$/", '', $role);
-            $roles[$role][] = $name;
+        foreach ($this->site_roles as $this_role) {
+            $roles[$this_role] = array_values(preg_grep("/\/$this_role\//", $pages));
         }
-        return $this->mergeRoles($roles);
-    }
-
-    private function getRolesByConfig()
-    {
-        $roles = json_decode(file_get_contents($this->roles_json), TRUE);
         
-        return $this->mergeRoles($roles);
+        $index_roles = $this->mergeRoles($roles);
+        
+        $this->index_roles = $index_roles[$role];
     }
 
     /*
@@ -63,15 +81,21 @@ class Roles extends Pages
     private function mergeRoles($roles)
     {
         foreach ($roles as $role => $array) {
-            if (strstr('User|Admin', $role))
+            
+            if (strstr('User', $role))
                 $array = array_merge($array, $roles['Public']);
             
             if (strstr('Admin', $role))
                 $array = array_merge($array, $roles['User']);
             
-            sort($array);
-            $roles[$role] = array_values(array_unique($array));
+            $array = array_values($array);
+            
+            $pages = array_unique(preg_replace("/.+\/|\.php/", '', array_values($array)));
+            $array = array_combine($pages, array_intersect_key($array, $pages));
+            
+            $roles[$role] = $array;
         }
+        
         return $roles;
     }
 }

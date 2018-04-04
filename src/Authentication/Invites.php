@@ -77,7 +77,7 @@ class Invites extends Log
         $table = $this->db->paramGet();
         
         if (is_false($table)) {
-            $this->addToLog("Error", "Invite not recognized.");
+            $this->addToLog("Error", "SQL::Invite not recognized => ".urldecode($id));
             return false;
         }
         
@@ -94,7 +94,7 @@ class Invites extends Log
         $str_random = randomString(60);
         
         $sql_string = 'INSERT INTO ' . $this->sql_schema . '.invites
-                        (email, id) VALUES (?, ?)';
+                        (email, id) VALUES ( ? , ? )';
         
         $this->db->setStatement($sql_string);
         $this->db->addVarible('email', $email);
@@ -103,7 +103,7 @@ class Invites extends Log
         $sql = $this->db->paramPut();
         
         if (is_false($sql)) {
-            $this->addToLog('Error', "Failed to create new invitation");
+            $this->addToLog('Error', "SQL::Failed to create new invitation");
             return false;
         }
         return $str_random;

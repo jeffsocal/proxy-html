@@ -85,7 +85,7 @@ class Authenticate extends Sessions
         $table = $this->db->paramGet();
         
         if (is_false($table)) {
-            $this->addToLog("Error", "Login not recognized.");
+            $this->addToLog("Fail", "Login not recognized.");
             return false;
         }
         
@@ -93,7 +93,7 @@ class Authenticate extends Sessions
         
         // compare password to hashed value
         if (is_false(password_verify($password, $password_hashed))) {
-            $this->addToLog("Error", "Password incorrect.");
+            $this->addToLog("Fail", "Password incorrect.");
             return false;
         }
         
@@ -104,6 +104,11 @@ class Authenticate extends Sessions
         return true;
     }
 
+    public function getErrorMessage()
+    {
+        return $this->getCurrentlogDump();
+    }
+
     //
     private function createNewUser_sql($login, $password)
     {
@@ -111,11 +116,17 @@ class Authenticate extends Sessions
         // hash the password for sql storage
         $password = password_hash($password, PASSWORD_DEFAULT);
         
-        $sql = $this->db->sqlPut('insert into 
-						' . $this->sql_schema . '.credentials
-						(login, password_hashed) 
-						values 
-						("' . $login . '","' . $password . '")');
+        $sql_string = 'INSERT INTO 
+					' . $this->sql_schema . '.credentials
+					(login, password_hashed) 
+					VALUES 
+					( ? , ? )';
+        
+        $this->db->setStatement($sql_string);
+        $this->db->addVarible('login', $login, 's');
+        $this->db->addVarible('password_hashed', $password, 's');
+        
+        $sql = $this->db->paramPut();
         
         if (is_false($sql)) {
             $this->addToLog('Error', "Failed to create new user");

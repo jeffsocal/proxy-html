@@ -8,7 +8,6 @@
  */
 namespace ProxyHTML;
 
-
 use ProxyHTML\UserInterface\Action;
 
 class Display
@@ -36,8 +35,8 @@ class Display
     {
         $ini = parse_ini_file('ini/config.ini');
         $pgs = new Action();
-        $page = '-' . preg_replace("/.+\/|\.php/", '', $pgs->getPageVariable());
-        if (strstr($page, 'Default') or $page == '')
+        $page = $pgs->getPageVariable();
+        if (strstr($page, 'Default'))
             $page = '';
         
         $this->html_body = "";
@@ -48,7 +47,7 @@ class Display
         
         $this->setMain($main);
         $this->setBody($body);
-        $this->setTitle($ini['site_name'] . $page);
+        $this->setTitle(trim($ini['site_name'] . ' - ' . $page, ' - '));
     }
 
     public function sp($n = 1)

@@ -29,12 +29,12 @@ class Action extends Input
         $this->setSessionAuth($auth->isAuthenticated());
         $this->setSessionRole($auth->getAuthenticatedRole());
         
-        $this->Roles = new Roles();
+        $this->Roles = new Roles($this->getSessionRole());
     }
 
     protected function defaultPage()
     {
-        return 'Default';
+        return $this->Roles->getDefaultPage();
     }
 
     private function setSessionAuth($boolean)
@@ -56,60 +56,27 @@ class Action extends Input
     }
 
     /*
-     * filter to ROLE allowed pages
-     */
-    public function pageValidate($page)
-    {
-        /*
-         * does the page exists
-         */
-        if (is_false($this->Roles->pageExists($page)))
-            return $this->defaultPage();
-        
-        /*
-         * has the session been tagged with a role
-         */
-        if (is_false($session_role = $this->getSessionRole()))
-            return $this->defaultPage();
-        
-        $index_roles = $this->Roles->getRoles();
-        
-        /*
-         * does the role exist
-         */
-        if (! key_exists($session_role, $index_roles))
-            return $this->defaultPage();
-        
-        /*
-         * can the role access that page
-         */
-        if (is_false(array_search($page, $index_roles[$session_role])))
-            return $this->defaultPage();
-        
-        return $page;
-    }
-
-    /*
-     * get the page from the GET variable
-     */
-    public function getPageVariable()
-    {
-        $page = $this->getVariable('page');
-        if (is_null($page)) 
-            $page = $this->defaultPage();
-        
-            return $this->pageValidate($page);
-    }
-
-    /*
      * if AUTH = false, filter to public domian
      */
     public function getPagePath()
     {
-        return $this->Roles->getPagePath($this->getPageVariable());
+        $page = $this->getVariable('page');
+        
+        return $this->Roles->getPagePath($page);
     }
-    
-    
+
+    public function getDefaultPagePath()
+    {
+        return $this->Roles->getDefaultPagePath();
+    }
+
+    public function getPageVariable($page = NULL)
+    {
+        if (is_null($page))
+            $page = $this->getVariable('page');
+        
+        return $this->Roles->getPageVariable($page);
+    }
 
     public function formSubmitted()
     {

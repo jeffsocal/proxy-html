@@ -14,9 +14,9 @@ class Forms extends Input
 {
 
     //
-    public function __construct()
+    public function __construct($test_sql_injection = true)
     {
-        parent::__construct();
+        parent::__construct($test_sql_injection);
     }
 
     //
@@ -183,11 +183,7 @@ class Forms extends Input
     {
         $ui = new Action();
         
-        if($action == NULL){
-            $action = $ui->getPageVariable();
-        } else {
-            $action = $ui->pageValidate($action);
-        }
+        $action = $ui->getPageVariable($action);
         
         $htm = '<form
 					 action=".?page=' . $action . '"

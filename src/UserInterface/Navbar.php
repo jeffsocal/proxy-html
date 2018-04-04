@@ -9,11 +9,10 @@
 namespace ProxyHTML\UserInterface;
 
 use ProxyHTML\Authentication\Roles;
+use ProxyHTML\Bootstrap;
 
 class Navbar extends Roles
 {
-
-    private $Action;
 
     private $array_main;
 
@@ -21,49 +20,39 @@ class Navbar extends Roles
 
     private $array_dropdown_sub;
 
+    private $array_nav;
+
     public function __construct()
     
     {
-        parent::__construct();
+        $act = new Action();
+        parent::__construct($act->getSessionRole());
         
-        $this->Action = new Action();
+        $this->array_nav = array();
     }
 
     public function getNavbar()
     {
         $regex = 'Nav[a-z]*';
         
-        $sr = $this->Action->getSessionRole();
-        
-        $pages = $this->getRoles();
-        $roles = array_keys($pages);
-        $pages = array_intersect_key($this->getPages(), array_flip($pages[$sr]));
-        $pages = str_replace($this->path_pages, '', $pages);
-        $pages = preg_replace('/(' . array_tostring($roles, '|', '') . ')\//', '', $pages);
-        $pages = preg_replace("/$regex|\.php/", '', $pages);
-        $pages = preg_replace("/^\w+$/", '', $pages);
-        $pages = preg_replace("/^\//", '', $pages);
+        $pages = $this->getRolePages();
+        $pages = preg_grep('/\/Nav\//', $pages);
+        $pages = preg_replace('/.+\/Nav\/*|\/*\w+\.php/', '', $pages);
         
         if (array_search('Logout', $pages))
             unset($pages[array_search('Login', $pages)]);
         
-        $pages = array_unique($pages);
-        sort($pages);
-        
-        foreach ($pages as $page) {
-            if ($page == '')
+        foreach ($pages as $page_name => $menu) {
+            
+            if ($menu == '') {
+                $this->addToNav($page_name);
                 continue;
-            
-            $page = explode('/', $page);
-            
-            if (sizeof($page) == 1)
-                $this->addToNav($page[0]);
-            
-            if (sizeof($page) == 2)
-                $this->addToNav($page[1], $page[0]);
-            
-            if (sizeof($page) >= 3)
-                $this->addToNav($page[2], $page[0], $page[1]);
+            } elseif (strstr($menu, '/')) {
+                $menu = explode('/', $menu);
+                $this->addToNav($page_name, $menu[0], $menu[1]);
+            } else {
+                $this->addToNav($page_name, $menu);
+            }
         }
         
         return $this->assembleNavHTML($this->array_nav);
@@ -71,7 +60,10 @@ class Navbar extends Roles
 
     private function addToNav($page, $dropdown = NULL, $subgroup = NULL)
     {
-        if ($dropdown == NULL) {
+        if (strstr("Login|Logout", $page)) {
+            $htm = new Bootstrap();
+            $this->array_nav['logio'][] = $htm->button($page, '.?page=' . $page);
+        } elseif ($dropdown == NULL) {
             $this->array_nav['main'][] = '<li class="nav-item"><a class="nav-link" href=".?page=' . $page . '">' . $page . '</a></li>';
         } elseif ($subgroup == NULL) {
             $this->array_nav[$dropdown][] = '<a class="dropdown-item" href=".?page=' . $page . '">' . $page . '</a>';
@@ -82,9 +74,12 @@ class Navbar extends Roles
 
     private function assembleNavHTML()
     {
-        $htm = '<ul class="navbar-nav mr-auto">' . PHP_EOL;
+        $htm = '<ul class="navbar-nav mr-auto navbar-right">' . PHP_EOL;
+        $htm_logio = '';
         foreach ($this->array_nav as $element => $group) {
-            if ($element == 'main') {
+            if ($element == 'logio') {
+                $htm_logio = array_tostring($group, PHP_EOL, '') . PHP_EOL;
+            } elseif ($element == 'main') {
                 $htm .= array_tostring($group, PHP_EOL, '') . PHP_EOL;
             } else {
                 $htm .= preg_replace("/\s+/", ' ', '
@@ -106,6 +101,7 @@ class Navbar extends Roles
             }
         }
         $htm .= '</ul>' . PHP_EOL;
+        $htm .= $htm_logio . PHP_EOL;
         return $htm;
     }
 }

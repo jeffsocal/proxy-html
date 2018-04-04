@@ -16,22 +16,22 @@ use ProxyMySQL\DetectHack;
 class Input extends Args
 {
 
-    //
-    private $sql_hack;
-
-    //
-    public function __construct($test = true)
+    public function __construct($test_sql_injection = true)
     {
         parent::__construct();
-        //
+
         $this->getWebVariables();
-        if (is_true($test)) {
+        
+        /*
+         * detect for SQL injection when not using 
+         * prepared statements
+         */
+        if (is_true($test_sql_injection)) {
             $this->sql_hack = new DetectHack();
             $this->testWebVariables($this->array_vars);
         }
     }
 
-    //
     private function loadHtmlVariables($obj)
     {
         foreach ($obj as $name => $value) {
@@ -51,7 +51,8 @@ class Input extends Args
             } else {
                 if (is_true($this->sql_hack->is_sqlinject($value))) {
                     
-                    $htm = new Display();                  
+                    $this->clearWebVariables();
+                    $htm = new Display();
                     $ath = new Authenticate('localhost');
                     $ath->end();
                     $htm->redirect(".");
@@ -60,12 +61,18 @@ class Input extends Args
         }
     }
 
-    //
     private function getWebVariables()
     {
         $this->loadHtmlVariables($_GET);
         $this->loadHtmlVariables($_POST);
         $this->loadHtmlVariables($_FILES);
+    }
+
+    private function clearWebVariables()
+    {
+        $_GET = [];
+        $_POST = [];
+        $_FILES = [];
     }
 }
 ?>
