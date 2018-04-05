@@ -276,7 +276,7 @@ class Bootstrap extends Display
         
         $htm .= '">' . $str . '
 				</span>';
-        return $this->header($htm, $ptsize);
+        return $htm;
     }
 
     //
