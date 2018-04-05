@@ -9,6 +9,7 @@
 namespace ProxyHTML\UserInterface;
 
 use ProxyHTML\IO\Input;
+use ProxyHTML\Authentication\Roles;
 
 class Forms extends Input
 {
@@ -179,13 +180,16 @@ class Forms extends Input
     }
 
     //
-    public function form($inputs, $method = "post", $action = NULL)
+    public function form($inputs, $action = NULL, $method = "post")
     {
         $ui = new Action();
         
+        if(is_null($action))
+            $action = $ui->getVar('page');
+        
         $action = $ui->getPageVariable($action);
         
-        $htm = '<form
+        $htm = '<form 
 					 action=".?page=' . $action . '"
 					 method="' . $method . '">' . $inputs . '</form>';
         return $htm;
