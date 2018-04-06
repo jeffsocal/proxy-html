@@ -485,7 +485,7 @@ class Bootstrap extends Display
         
         $htm = '<div class="alert alert-' . $a_type . '"
 				role="alert">
-				<strong>' . $catch . '</strong>
+				<strong>' . $catch . '</strong>' . $this->sp(1) . '
 				' . $text . '
 				</div>';
         return $htm;

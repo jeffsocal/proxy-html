@@ -9,7 +9,6 @@
 namespace ProxyHTML\UserInterface;
 
 use ProxyHTML\IO\Input;
-use ProxyHTML\Authentication\Roles;
 
 class Forms extends Input
 {
@@ -166,8 +165,7 @@ class Forms extends Input
         $id = strtolower(preg_replace("/\s+/", "_", $name));
         $htm = '<textarea
 				name="' . $name . '" id="' . $id . '"
-				cols="' . $width . ' " rows="' . $height . '">
-				' . $str . '</textarea>';
+				cols="' . $width . ' " rows="' . $height . '">' . $str . '</textarea>';
         return $htm;
     }
 

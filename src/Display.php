@@ -41,9 +41,10 @@ class Display
         
         $this->html_body = "";
         $this->html_section = array();
+        $this->html_section['content'] = array();
         $this->html_page = "";
         $this->html_js = "";
-        $this->html_message = false;
+        $this->html_message = array();
         
         $this->setMain($main);
         $this->setBody($body);
@@ -66,6 +67,10 @@ class Display
     private function buildElement($element)
     {
         foreach ($this->html_section as $name => $contents) {
+            
+            if (count($contents) == 0)
+                continue;
+            
             // insert n
             $element = preg_replace("/<!--\s*#" . $name . "\s*-->/", $contents, $element);
         }
@@ -83,9 +88,9 @@ class Display
         // insert BODY
         $this_html = $this->buildElement($this_html);
         
-        $this_html = preg_replace("/[\s\n]+/", " ", $this_html);
-        // $this_html = preg_replace ("/\>[\s\n]+/", ">", $this_html);
-        // $this_html = preg_replace ("/[\s\n]+\</", "<", $this_html);
+        // $this_html = preg_replace("/[\s\n]+/", " ", $this_html);
+        $this_html = preg_replace("/\>[\s\n]+/", ">", $this_html);
+        $this_html = preg_replace("/[\s\n]+\</", "<", $this_html);
         return $this_html;
     }
 
