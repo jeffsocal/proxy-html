@@ -39,8 +39,8 @@ class Navbar extends Roles
         $pages = preg_grep('/\/Nav\//', $pages);
         $pages = preg_replace('/.+\/Nav\/*|\/*\w+\.php/', '', $pages);
         
-        if (array_search('Logout', $pages))
-            unset($pages[array_search('Login', $pages)]);
+        if (key_exists('Logout', $pages))
+            unset($pages['Login']);
         
         foreach ($pages as $page_name => $menu) {
             

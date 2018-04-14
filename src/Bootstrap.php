@@ -26,6 +26,7 @@ class Bootstrap extends Display
             'small',
             'tiny'
         );
+        
         $this->types = array(
             'default',
             'primary',
@@ -67,15 +68,28 @@ class Bootstrap extends Display
     }
 
     //
-    public function row($layout = "6-6", $array)
+    public function row($layout = "{'md':[6,6]}", $array)
     {
+        if (! strstr($layout, "{")) {
+            $layout = explode("-", $layout);
+            $layout = array(
+                "md" => $layout
+            );
+            $layout = json_encode($layout);
+        }
+        
+        $layout = json_decode($layout, JSON_OBJECT_AS_ARRAY);
+        
         $htm = '<div class="row">';
         
-        $layout = explode("-", $layout);
-        
         foreach ($array as $n => $content) {
-            $width = $layout[$n];
-            $htm .= '<div class="col-md-' . $width . '">';
+            $htm .= '<div class="';
+            
+            foreach ($layout as $size => $facet) {
+                $htm .= 'col-' . $size . '-' . $facet[$n] . ' ';
+            }
+            
+            $htm .= '">';
             $htm .= $content;
             $htm .= '</div>';
         }

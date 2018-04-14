@@ -22,19 +22,19 @@ class Forms extends Input
     //
     private function preselectArray($name, $array)
     {
-        $selected = $this->getVariable($name);
+        $selected = $this->getVariable($name, $array);
         
-        if (! is_array($selected)) {
-            if (! is_false($key = array_search($selected, $array)))
-                $array[$key] = '*' . $array[$key];
-            
+        if (is_null($selected))
             return $array;
+        
+        $array = preg_replace('/^\*/', '', $array);
+        
+        $keys = array_flip(array_intersect($array, $selected));
+        
+        foreach ($keys as $key) {
+            $array[$key] = '*' . $array[$key];
         }
         
-        foreach ($selected as $select) {
-            if (! is_false($key = array_search($select, $array)))
-                $array[$key] = '*' . $array[$key];
-        }
         return $array;
     }
 
@@ -182,7 +182,7 @@ class Forms extends Input
     {
         $ui = new Action();
         
-        if(is_null($action))
+        if (is_null($action))
             $action = $ui->getVar('page');
         
         $action = $ui->getPageVariable($action);

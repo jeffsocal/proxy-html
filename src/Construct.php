@@ -14,13 +14,19 @@ use ProxyIO\File\Read;
 class Construct extends Sessions
 {
 
-    //
     private $htm;
 
-    //
+    private $include_path;
+
+    private $layouts_path;
+
     public function __construct()
     {
         parent::__construct();
+        
+        $this->include_path = get_include_path();
+        $ini = parse_ini_file('ini/config.ini');
+        $this->layouts_path = $ini['layouts_path'];
         
         $this->htm = array();
         
@@ -33,9 +39,9 @@ class Construct extends Sessions
         );
         
         foreach ($parts as $part) {
-            $filename = '../src/layouts/' . $authRole . '/' . $part . '.htm';
+            $filename = '../' . $this->layouts_path . $authRole . '/' . $part . '.htm';
             if (! file_exists($filename))
-                $filename = '../src/layouts/Default/' . $part . '.htm';
+                $filename = '../' . $this->layouts_path . 'Default/' . $part . '.htm';
             
             $this->htm[$part] = new Read($filename);
         }
@@ -79,9 +85,11 @@ class Construct extends Sessions
     {
         $authRole = $this->getAuthenticatedRole();
         
-        $filename = '../src/layouts/' . $authRole . '/' . $layout . '.htm';
+        $filename = '../' . $this->layouts_path . $authRole . '/' . $layout . '.htm';
+        
         if (! file_exists($filename))
-            $filename = '../src/layouts/Default/' . $layout . '.htm';
+            $filename = '../' . $this->layouts_path . 'Default/' . $layout . '.htm';
+            
         
         if (! file_exists($filename))
             return '';
