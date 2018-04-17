@@ -89,8 +89,8 @@ class Display
         $this_html = $this->buildElement($this_html);
         
         // $this_html = preg_replace("/[\s\n]+/", " ", $this_html);
-        $this_html = preg_replace("/\>[\s\n]+/", ">", $this_html);
-        $this_html = preg_replace("/[\s\n]+\</", "<", $this_html);
+        // $this_html = preg_replace("/\>[\s\n]+/", ">", $this_html);
+        // $this_html = preg_replace("/[\s\n]+\</", "<", $this_html);
         return $this_html;
     }
 

@@ -20,9 +20,9 @@ class Pages
 
     private $default_page;
 
-    protected $pages_path;
+    public $pages_path;
 
-    protected $include_path;
+    public $include_path;
 
     public function __construct()
     {
