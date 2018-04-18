@@ -22,7 +22,13 @@ class Tables
     //
     public function table_ashtml($table_array, $print_header = true)
     {
-        $len = table_length($table_array);
+        
+        if(is_false($table_array) or count($table_array) == 0)
+            return '';
+            
+        if($len = table_length($table_array) == 0)
+            return '';
+        
         $head = table_header($table_array);
         $html = "<table class=\"table ";
         if (is_true($this->is_striped))
