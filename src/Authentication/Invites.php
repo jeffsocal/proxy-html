@@ -9,7 +9,7 @@
 namespace ProxyHTML\Authentication;
 
 use ProxyIO\File\Log;
-use ProxyMySQL\Parameterized;
+use ProxyMySQL\Transact;
 
 class Invites extends Log
 {
@@ -33,7 +33,7 @@ class Invites extends Log
         $this->method_is_file = is_false($server);
         
         if (! is_false($server)) {
-            $this->db = new Parameterized($server);
+            $this->db = new Transact($server);
             $this->sql_schema = $schema;
         }
     }
@@ -69,15 +69,14 @@ class Invites extends Log
      */
     private function isInviteValid_sql($id)
     {
-        $sql_string = 'SELECT * FROM ' . $this->sql_schema . '.invites
-                        WHERE id = ?';
-        $this->db->setStatement($sql_string);
-        $this->db->addVarible('id', urldecode($id));
-        
-        $table = $this->db->paramGet();
+        $str = 'SELECT * FROM ' . $this->sql_schema . '.invites WHERE login = ?';
+        $par = [
+            'id' => urldecode($id)
+        ];
+        $table = $this->db->transaction($str, $par);
         
         if (is_false($table)) {
-            $this->addToLog("Error", "SQL::Invite not recognized => ".urldecode($id));
+            $this->addToLog("Error", "SQL::Invite not recognized => " . urldecode($id));
             return false;
         }
         
@@ -90,17 +89,15 @@ class Invites extends Log
     //
     private function createNewInvite_sql($email)
     {
-        
         $str_random = randomString(60);
         
-        $sql_string = 'INSERT INTO ' . $this->sql_schema . '.invites
+        $str = 'INSERT INTO ' . $this->sql_schema . '.invites
                         (email, id) VALUES ( ? , ? )';
-        
-        $this->db->setStatement($sql_string);
-        $this->db->addVarible('email', $email);
-        $this->db->addVarible('id', $str_random);
-        
-        $sql = $this->db->paramPut();
+        $par = [
+            'email' => $email,
+            'id' => $str_random
+        ];
+        $sql = $this->db->transaction($str, $par);
         
         if (is_false($sql)) {
             $this->addToLog('Error', "SQL::Failed to create new invitation");

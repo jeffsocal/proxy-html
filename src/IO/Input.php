@@ -11,7 +11,7 @@ namespace ProxyHTML\IO;
 use ProxyHTML\Display;
 use ProxyHTML\Authentication\Authenticate;
 use ProxyIO\Args;
-use ProxyMySQL\DetectHack;
+use ProxyMySQL\Base\DetectHack;
 
 class Input extends Args
 {

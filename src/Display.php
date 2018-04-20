@@ -114,6 +114,10 @@ class Display
     //
     public function addToJS($text = "")
     {
+        
+        if(preg_match("/^[http|js]/", $text))
+            $text = '<script src="' . $text . '"></script>';
+            
         $this->addToSection("jscript", $text);
     }
 

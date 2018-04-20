@@ -11,29 +11,53 @@ namespace ProxyHTML;
 class Tables
 {
 
-    protected $is_striped;
+    protected $table_format;
 
-    //
-    public function __construct($striped = false)
+    protected $table_id;
+
+    public function __construct()
     {
-        $this->is_striped = $striped;
+        $this->setTableId();
+        $this->table_format = [
+            'table-responsive'
+        ];
     }
 
-    //
-    public function table_ashtml($table_array, $print_header = true)
+    private function setTableId()
     {
+        $this->table_id = 'table_' . randomString(5, 'naA');
+    }
+
+    public function setTableStyle($option)
+    {
+        $available = 'table-responsive
+                     table-dark
+                     thead-light
+                     thead-dark
+                     table-striped
+                     table-bordered
+                     table-hover
+                     table-sm';
         
-        if(is_false($table_array) or count($table_array) == 0)
+        if (! strstr($available, $option))
             return '';
-            
-        if($len = table_length($table_array) == 0)
+        
+        array_push($this->table_format, $option);
+    }
+
+    public function table($table_array, $print_header = true)
+    {
+        if (is_false($table_array) or count($table_array) == 0)
+            return '';
+        
+        $len = table_length($table_array);
+        if ($len == 0)
             return '';
         
         $head = table_header($table_array);
-        $html = "<table class=\"table ";
-        if (is_true($this->is_striped))
-            $html .= "table-striped ";
-        $html .= "table-condensed\">" . PHP_EOL;
+        $html = "<table";
+        $html .= " id=\"" . $this->table_id . "\"";
+        $html .= " class=\"" . array_tostring($this->table_format, ' ', '') . "\">" . PHP_EOL;
         
         /*
          * HEADER

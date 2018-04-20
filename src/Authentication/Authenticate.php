@@ -8,7 +8,7 @@
  */
 namespace ProxyHTML\Authentication;
 
-use ProxyMySQL\Parameterized;
+use ProxyMySQL\Transact;
 
 class Authenticate extends Sessions
 {
@@ -34,7 +34,7 @@ class Authenticate extends Sessions
         $this->method_is_file = is_false($server);
         
         if (! is_false($server)) {
-            $this->db = new Parameterized($server);
+            $this->db = new Transact($server);
             $this->sql_schema = $schema;
         }
     }
@@ -78,11 +78,11 @@ class Authenticate extends Sessions
      */
     private function isUserValid_sql($login, $password)
     {
-        $sql_string = 'SELECT * FROM ' . $this->sql_schema . '.credentials WHERE login=?';
-        $this->db->setStatement($sql_string);
-        $this->db->addVarible('login', $login, 's');
-        
-        $table = $this->db->paramGet();
+        $str = 'SELECT * FROM ' . $this->sql_schema . '.credentials WHERE login = ?';
+        $par = [
+            'login' => $login
+        ];
+        $table = $this->db->transaction($str, $par);
         
         if (is_false($table)) {
             $this->addToLog("Fail", "Login not recognized.");
@@ -116,21 +116,22 @@ class Authenticate extends Sessions
         // hash the password for sql storage
         $password = password_hash($password, PASSWORD_DEFAULT);
         
-        $sql_string = 'INSERT INTO 
+        $str = 'INSERT INTO 
 					' . $this->sql_schema . '.credentials
 					(login, password_hashed) 
 					VALUES 
 					( ? , ? )';
         
-        $this->db->setStatement($sql_string);
-        $this->db->addVarible('login', $login, 's');
-        $this->db->addVarible('password_hashed', $password, 's');
+        $par = [
+            'login' => $login,
+            'password_hashed' => $password
+        ];
         
-        $sql = $this->db->paramPut();
+        $sql = $this->db->transaction($str, $par);
         
-        if (is_false($sql)) {
+        if (is_false($sql))
             $this->addToLog('Error', "Failed to create new user");
-        }
+        
         return $sql;
     }
 
