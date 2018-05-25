@@ -31,7 +31,7 @@ class Navbar extends Roles
         $this->array_nav = array();
     }
 
-    public function getNavbar()
+    public function getNavbar($align = 'right')
     {
         $regex = 'Nav[a-z]*';
         
@@ -55,7 +55,7 @@ class Navbar extends Roles
             }
         }
         
-        return $this->assembleNavHTML($this->array_nav);
+        return $this->assembleNavHTML($align);
     }
 
     private function addToNav($page, $dropdown = NULL, $subgroup = NULL)
@@ -72,9 +72,12 @@ class Navbar extends Roles
         }
     }
 
-    private function assembleNavHTML()
+    private function assembleNavHTML($align = 'right')
     {
-        $htm = '<ul class="navbar-nav mr-auto navbar-right">' . PHP_EOL;
+        $align = substr($align, 0, 1);
+        
+        $htm = '<ul class="navbar-nav m' . $align . '-auto">' . PHP_EOL;
+        
         $htm_logio = '';
         foreach ($this->array_nav as $element => $group) {
             if ($element == 'logio') {
