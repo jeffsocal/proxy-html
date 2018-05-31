@@ -22,16 +22,16 @@ class Forms extends Input
     //
     private function preselectArray($name, $array)
     {
-        $selected = $this->getVariable($name, $array);
+        $selected[] = $this->getVariable($name, $array);
         
         if (is_null($selected))
             return $array;
         
         $array = preg_replace('/^\*/', '', $array);
         
-        $keys = array_flip(array_intersect($array, $selected));
+        $keys = array_intersect_key($array, array_flip($selected));
         
-        foreach ($keys as $key) {
+        foreach ($keys as $key => $value) {
             $array[$key] = '*' . $array[$key];
         }
         
@@ -50,7 +50,7 @@ class Forms extends Input
         
         // box | drop | multi
         if (strstr($type, 'onSelect')) {
-            $change = 'onChange="location = this.options[this.selectedIndex].value;">';
+            $change = 'onchange="this.form.submit()" ';
             $htm = str_replace("<select", '<select ' . $change, $htm);
         }
         
@@ -65,13 +65,13 @@ class Forms extends Input
         }
         
         //
-        foreach ($array as $variable => $value) {
+        foreach ($array as $key => $value) {
             $htm .= '<option';
             if (preg_match("/^\*/", $value)) {
                 $htm .= ' selected';
                 $value = str_replace("*", "", $value);
             }
-            $htm .= ' value="' . $value . '">' . $value . '</option>';
+            $htm .= ' value="' . $key . '">' . $value . '</option>';
         }
         $htm .= "</select>";
         return $htm;
