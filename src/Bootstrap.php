@@ -68,8 +68,10 @@ class Bootstrap extends Display
     }
 
     //
-    public function row($layout = "{'md':[6,6]}", $array)
+    public function row($layout = '{"md":[6,6]}', $array)
     {
+        
+        
         if (! strstr($layout, "{")) {
             $layout = explode("-", $layout);
             $layout = array(

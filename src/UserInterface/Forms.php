@@ -22,10 +22,15 @@ class Forms extends Input
     //
     private function preselectArray($name, $array)
     {
-        $selected[] = $this->getVariable($name, $array);
+        $selected = $this->getVariable($name, $array);
         
         if (is_null($selected))
             return $array;
+        
+        if (! is_array($selected))
+            $selected = array(
+                $selected
+            );
         
         $array = preg_replace('/^\*/', '', $array);
         
@@ -160,10 +165,11 @@ class Forms extends Input
     }
 
     //
-    public function textarea($name, $str = '', $width = 20, $height = 5)
+    public function textarea($name, $str = '', $width = 20, $height = 5, $maxlength = 5000)
     {
         $id = strtolower(preg_replace("/\s+/", "_", $name));
         $htm = '<textarea
+                maxlength="' . $maxlength . '"
 				name="' . $name . '" id="' . $id . '"
 				cols="' . $width . ' " rows="' . $height . '">' . $str . '</textarea>';
         return $htm;
