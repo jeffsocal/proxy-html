@@ -16,7 +16,10 @@ class LookupIP
     //
     public function __construct($ipaddress)
     {
-        $array = json_decode(file_get_contents('http://freegeoip.net/json/' . $_SERVER['REMOTE_ADDR']));
+        $ini = parse_ini_file('ini/config.ini');
+        $access_key = $ini['ipstack_api_key'];
+        
+        $array = json_decode(file_get_contents('http://api.ipstack.com/' . $_SERVER['REMOTE_ADDR'] . '?access_key=' . $access_key . '&format=1'));
         $this->setLocationData($array);
     }
 
