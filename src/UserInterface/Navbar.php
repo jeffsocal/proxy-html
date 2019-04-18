@@ -62,13 +62,13 @@ class Navbar extends Roles
     {
         if (strstr("Login|Logout", $page)) {
             $htm = new Bootstrap();
-            $this->array_nav['logio'][] = $htm->button($page, '.?page=' . $page);
+            $this->array_nav['logio'][] = $htm->button($page, '/' . $page);
         } elseif ($dropdown == NULL) {
-            $this->array_nav['main'][] = '<li class="nav-item"><a class="nav-link" href=".?page=' . $page . '">' . $page . '</a></li>';
+            $this->array_nav['main'][] = '<li class="nav-item"><a class="nav-link" href="/' . $page . '">' . $page . '</a></li>';
         } elseif ($subgroup == NULL) {
-            $this->array_nav[$dropdown][] = '<a class="dropdown-item" href=".?page=' . $page . '">' . $page . '</a>';
+            $this->array_nav[$dropdown][] = '<a class="dropdown-item" href="/' . $page . '">' . $page . '</a>';
         } else {
-            $this->array_nav[$dropdown][$subgroup][] = '<a class="dropdown-item" href=".?page=' . $page . '">' . $page . '</a>';
+            $this->array_nav[$dropdown][$subgroup][] = '<a class="dropdown-item" href="/' . $page . '">' . $page . '</a>';
         }
     }
 
@@ -88,7 +88,7 @@ class Navbar extends Roles
                 $htm .= preg_replace("/\s+/", ' ', '
                         <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle"
-		                href="./" id="dropdown00" data-toggle="dropdown"
+		                href="/" id="dropdown00" data-toggle="dropdown"
 		                aria-haspopup="true" aria-expanded="false">' . $element . '</a>
 		                <div class="dropdown-menu" aria-labelledby="dropdown00">');
                 foreach ($group as $drop => $subgroup) {

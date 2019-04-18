@@ -39,9 +39,9 @@ class Construct extends Sessions
         );
         
         foreach ($parts as $part) {
-            $filename = '../' . $this->layouts_path . $authRole . '/' . $part . '.htm';
+            $filename = $this->include_path . $this->layouts_path . $authRole . '/' . $part . '.htm';
             if (! file_exists($filename))
-                $filename = '../' . $this->layouts_path . 'Default/' . $part . '.htm';
+                $filename = $this->include_path . $this->layouts_path . 'Default/' . $part . '.htm';
             
             $this->htm[$part] = new Read($filename);
         }
@@ -89,7 +89,6 @@ class Construct extends Sessions
         
         if (! file_exists($filename))
             $filename = '../' . $this->layouts_path . 'Default/' . $layout . '.htm';
-            
         
         if (! file_exists($filename))
             return '';

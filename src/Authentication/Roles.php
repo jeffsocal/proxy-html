@@ -47,12 +47,18 @@ class Roles extends Pages
             $page = $this->getDefaultPage();
         
         if (! key_exists($page, $this->index_roles))
-            return "404";
+            $this->pageNotFound();
         
         if (! file_exists($this->include_path . $this->index_roles[$page]))
-            return "404";
+            $this->pageNotFound();
         
         return $page;
+    }
+
+    private function pageNotFound()
+    {
+        http_response_code(404);
+        exit();
     }
 
     protected function getRolePages()

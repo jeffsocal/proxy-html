@@ -65,6 +65,15 @@ class Action extends Input
         return $this->Roles->getPagePath($page);
     }
 
+    public function getRoutePath()
+    {
+        $page = $_SERVER['REQUEST_URI'];
+        $page = preg_replace("/\?.*/", "", $page);
+        $page = trim($page, "/");
+        
+        return $this->Roles->getPagePath($page);
+    }
+
     public function getDefaultPagePath()
     {
         return $this->Roles->getDefaultPagePath();

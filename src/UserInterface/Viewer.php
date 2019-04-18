@@ -52,9 +52,7 @@ class Viewer
         if (is_false($this->viewer_track))
             return false;
         
-        $trace = '';
-        $trace .= $_SERVER['REMOTE_ADDR'];
-        $trace .= ' ' . $_SERVER['REQUEST_URI'];
+        $trace = $_SERVER['REQUEST_URI'];
         
         $log = new Log('tracking');
         $log->addToLog($trace);
