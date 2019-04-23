@@ -19,11 +19,11 @@ class Input extends Args
     public function __construct($test_sql_injection = true)
     {
         parent::__construct();
-
+        
         $this->getWebVariables();
         
         /*
-         * detect for SQL injection when not using 
+         * detect for SQL injection when not using
          * prepared statements
          */
         if (is_true($test_sql_injection)) {
