@@ -33,10 +33,15 @@ class TokenAccess extends ApplicationInterface
         $this->access_key = preg_replace("/\_|\-|\+|\s|\.|\/|\\]/", "", $this->access_key);
         if ($this->access_key == '')
             $this->access_key = NULL;
-        
+        /*
+         * did (key) get called?
+         */
+        $this->keyArgInstantiated();
         $this->setTokenPath($this->access_key);
         
-        $this->keyArgInstantiated();
+        /*
+         * does the physical (key) exists?
+         */
         $this->keyExists();
         
         /*
