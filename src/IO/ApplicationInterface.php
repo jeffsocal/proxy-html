@@ -26,8 +26,10 @@ class ApplicationInterface
     public function getVariable($variable, $value = NULL, bool $required = FALSE)
     {
         $val = $this->Input->getVariable($variable, $value);
+        $val = urldecode($val);
+        
         if ($required == TRUE and is_null($val))
-            $this->returnError(422, [
+            $this->returnError(400, [
                 'error' => '(' . $variable . ') parameter undefined'
             ]);
         
