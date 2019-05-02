@@ -12,6 +12,7 @@ use ProxyHTML\IO\ApplicationInterface;
 use bandwidthThrottle\tokenBucket\storage\FileStorage;
 use bandwidthThrottle\tokenBucket\Rate;
 use bandwidthThrottle\tokenBucket\TokenBucket;
+use ProxyMySQL\Transactions\Simple;
 
 class TokenAccess extends ApplicationInterface
 {
@@ -61,6 +62,11 @@ class TokenAccess extends ApplicationInterface
         $this->token_path = get_include_path() . "api/tokens/" . $token . ".bucket";
     }
 
+    public function getToken()
+    {
+        return $this->access_key;
+    }
+
     public function getTokenPath()
     {
         return $this->token_path;
@@ -84,6 +90,11 @@ class TokenAccess extends ApplicationInterface
                 'suggest' => 'retry-after ' . time_toString($seconds),
                 'wait_sec' => $seconds
             ]);
+        
+        $sql = new Simple("127.0.0.1");
+        $sql->sqlMod("UPDATE authorizations.tokens 
+                      SET use_count = use_count+1 
+                      WHERE token = '" . $this->access_key . "'");
     }
 
     private function keyArgInstantiated()

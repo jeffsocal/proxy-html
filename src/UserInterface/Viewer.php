@@ -43,7 +43,7 @@ class Viewer
         $trace .= ' ' . $ipl->getLatitude();
         $trace .= ' ' . $ipl->getLongitude();
         
-        $log = new Log('traffic');
+        $log = new Log('whois');
         $log->addToLog($trace);
     }
 
