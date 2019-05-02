@@ -38,7 +38,7 @@ class Input extends Args
             if (! is_array($value))
                 $value = trim($value);
             
-            $this->array_vars[$name] = $value;
+            $this->array_vars[$name] = urldecode($value);
         }
     }
 
