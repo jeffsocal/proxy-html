@@ -38,6 +38,20 @@ class Bootstrap extends Display
         );
     }
 
+    public function getSections(string $content = NULL)
+    {
+        if (is_null($content))
+            $content = $this->html_body;
+        
+        preg_match_all("/\#[A-Z0-9\/]*/", $content, $sections);
+        $sections = preg_replace("/\#/", "", $sections[0]);
+        $sections = array_filter($sections, function ($x) {
+            return ! strstr($x, 'AUTO');
+        });
+        $sections = array_map('strtolower', $sections);
+        return $sections;
+    }
+
     //
     private function translateSize($size)
     {
@@ -70,8 +84,6 @@ class Bootstrap extends Display
     //
     public function row($layout = '{"md":[6,6]}', $array)
     {
-        
-        
         if (! strstr($layout, "{")) {
             $layout = explode("-", $layout);
             $layout = array(

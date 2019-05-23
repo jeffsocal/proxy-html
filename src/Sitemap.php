@@ -24,8 +24,10 @@ class Sitemap
         if (is_null($lastmod))
             $lastmod = date("Y-m-d");
         
+        $ini = parse_ini_file(get_include_path() . 'ini/config.ini');
+        
         $this->map_array[] = array(
-            'loc' => 'http://' . $_SERVER['SERVER_NAME'] . '/' . $loc,
+            'loc' => 'http://' . $ini['server_name'] . '/' . $loc,
             'lastmod' => $lastmod,
             'changefreq' => $changefreq,
             'priority' => $priority

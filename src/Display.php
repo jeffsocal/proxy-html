@@ -68,11 +68,13 @@ class Display
     {
         foreach ($this->html_section as $name => $contents) {
             
-            if (count($contents) == 0)
+            if (@count($contents) == 0)
                 continue;
             
+            $name = str_replace("/", "\/", $name);
             // insert n
             $element = preg_replace("/<!--\s*#" . $name . "\s*-->/", $contents, $element);
+            
         }
         return $element;
     }
@@ -114,10 +116,9 @@ class Display
     //
     public function addToJS($text = "")
     {
-        
-        if(preg_match("/^[http|js]/", $text))
+        if (preg_match("/^[http|js]/", $text))
             $text = '<script src="' . $text . '"></script>';
-            
+        
         $this->addToSection("jscript", $text);
     }
 
