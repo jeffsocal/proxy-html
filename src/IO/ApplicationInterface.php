@@ -47,7 +47,7 @@ class ApplicationInterface
         header("Content-Type: application/json; charset=UTF-8");
         
         http_response_code($code);
-        echo json_encode($array);
+        echo json_encode($array, JSON_NUMERIC_CHECK);
         exit();
     }
 }
