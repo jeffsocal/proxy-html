@@ -25,10 +25,10 @@ class Action extends Input
     {
         parent::__construct();
         $auth = new Sessions();
-        
+
         $this->setSessionAuth($auth->isAuthenticated());
         $this->setSessionRole($auth->getAuthenticatedRole());
-        
+
         $this->Roles = new Roles($this->getSessionRole());
     }
 
@@ -61,7 +61,7 @@ class Action extends Input
     public function getPagePath()
     {
         $page = $this->getVariable('page');
-        
+
         return $this->Roles->getPagePath($page);
     }
 
@@ -70,7 +70,7 @@ class Action extends Input
         $page = $_SERVER['REQUEST_URI'];
         $page = preg_replace("/\?.*/", "", $page);
         $page = trim($page, "/");
-        
+
         return $this->Roles->getPagePath($page);
     }
 
@@ -83,17 +83,17 @@ class Action extends Input
     {
         if (is_null($page))
             $page = $this->getVariable('page');
-        
+
         return $this->Roles->getPageVariable($page);
     }
 
     public function formSubmitted()
     {
         $args = $this->listVariables();
-        
+
         if (! is_false($k = array_search('page', $args)))
             unset($args[$k]);
-        
+
         return (sizeof($args) > 0);
     }
 }

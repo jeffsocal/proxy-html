@@ -27,9 +27,8 @@ class Pages
     public function __construct()
     {
         $this->include_path = get_include_path();
-        $ini = parse_ini_file('ini/config.ini');
-        $this->pages_path = $ini['pages_path'];
-        $this->default_page = $ini['site_default'];
+        $this->pages_path =  $_SERVER['INI']['pages_path'];
+        $this->default_page =  $_SERVER['INI']['site_default'];
         $this->indexPages();
     }
 

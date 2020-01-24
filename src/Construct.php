@@ -23,13 +23,12 @@ class Construct extends Sessions
     public function __construct()
     {
         parent::__construct();
-        
+
         $this->include_path = get_include_path();
-        $ini = parse_ini_file('ini/config.ini');
-        $this->layouts_path = $ini['layouts_path'];
-        
+        $this->layouts_path = $_SERVER['INI']['layouts_path'];
+
         $this->htm = array();
-        
+
         $authRole = $this->getAuthenticatedRole();
         $parts = array(
             "Main",
@@ -37,12 +36,12 @@ class Construct extends Sessions
             "Footer",
             "Navbar"
         );
-        
+
         foreach ($parts as $part) {
             $filename = $this->include_path . $this->layouts_path . $authRole . '/' . $part . '.htm';
             if (! file_exists($filename))
                 $filename = $this->include_path . $this->layouts_path . 'Default/' . $part . '.htm';
-            
+
             $this->htm[$part] = new Read($filename);
         }
     }
@@ -84,15 +83,15 @@ class Construct extends Sessions
     public function getOther($layout)
     {
         $authRole = $this->getAuthenticatedRole();
-        
-        $filename = '../' . $this->layouts_path . $authRole . '/' . $layout . '.htm';
-        
+
+        $filename = get_include_path() . $this->layouts_path . $authRole . '/' . $layout . '.htm';
+
         if (! file_exists($filename))
-            $filename = '../' . $this->layouts_path . 'Default/' . $layout . '.htm';
-        
+            $filename = get_include_path() . $this->layouts_path . 'Default/' . $layout . '.htm';
+
         if (! file_exists($filename))
             return '';
-        
+
         $htm = new Read($filename);
         return $htm->getContents();
     }

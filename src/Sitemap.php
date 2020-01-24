@@ -23,11 +23,9 @@ class Sitemap
     {
         if (is_null($lastmod))
             $lastmod = date("Y-m-d");
-        
-        $ini = parse_ini_file(get_include_path() . 'ini/config.ini');
-        
+
         $this->map_array[] = array(
-            'loc' => 'http://' . $ini['server_name'] . '/' . $loc,
+            'loc' => 'http://' . $_SERVER['INI']['server_name'] . '/' . $loc,
             'lastmod' => $lastmod,
             'changefreq' => $changefreq,
             'priority' => $priority
@@ -38,7 +36,7 @@ class Sitemap
     {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
         $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
-        
+
         foreach ($this->map_array as $element) {
             $this_element = "<url>\n";
             $this_element .= "<loc>#loc</loc>\n";
@@ -46,16 +44,16 @@ class Sitemap
             $this_element .= "<changefreq>#frq</changefreq>\n";
             $this_element .= "<priority>#pri</priority>\n";
             $this_element .= "</url>\n";
-            
+
             $this_element = preg_replace("/\#loc/", $element['loc'], $this_element);
             $this_element = preg_replace("/\#mod/", $element['lastmod'], $this_element);
             $this_element = preg_replace("/\#frq/", $element['changefreq'], $this_element);
             $this_element = preg_replace("/\#pri/", $element['priority'], $this_element);
-            
+
             $xml .= $this_element . "\n";
         }
         $xml .= '</urlset>';
-        
+
         return $xml;
     }
 }

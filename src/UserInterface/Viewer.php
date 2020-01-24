@@ -24,9 +24,8 @@ class Viewer
 
     function __construct()
     {
-        $ini = parse_ini_file('ini/config.ini', FALSE, INI_SCANNER_TYPED);
-        $this->viewer_track = $ini['viewer_track'];
-        $this->viewer_whois = $ini['viewer_whois'];
+        $this->viewer_track =  $_SERVER['INI']['viewer_track'];
+        $this->viewer_whois =  $_SERVER['INI']['viewer_whois'];
     }
 
     function whois()

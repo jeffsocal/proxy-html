@@ -21,8 +21,7 @@ class Roles extends Pages
     {
         parent::__construct();
         
-        $ini = parse_ini_file('ini/config.ini');
-        $this->site_roles = explode(",", $ini['site_roles']);
+        $this->site_roles = explode(",",  $_SERVER['INI']['site_roles']);
         
         $this->indexRolePages($role);
     }

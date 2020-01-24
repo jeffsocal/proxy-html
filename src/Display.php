@@ -33,7 +33,6 @@ class Display
     //
     public function __construct($main = NULL, $body = NULL)
     {
-        $ini = parse_ini_file('ini/config.ini');
         $pgs = new Action();
         $page = $pgs->getPageVariable();
         if (strstr($page, 'Default'))
@@ -48,7 +47,7 @@ class Display
         
         $this->setMain($main);
         $this->setBody($body);
-        $this->setTitle(trim($ini['site_name'] . ' - ' . $page, ' - '));
+        $this->setTitle(trim( $_SERVER['INI']['site_name'] . ' - ' . $page, ' - '));
     }
 
     public function sp($n = 1)
