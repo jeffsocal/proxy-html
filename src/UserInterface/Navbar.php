@@ -62,13 +62,13 @@ class Navbar extends Roles
     {
         if (strstr("Login|Logout", $page)) {
             $htm = new Bootstrap();
-            $this->array_nav['logio'][] = $htm->button($page, '/' . $page);
+            $this->array_nav['logio'][] = $htm->button($page, '/' . $page ."/");
         } elseif ($dropdown == NULL) {
-            $this->array_nav['main'][] = '<li class="nav-item"><a class="nav-link" href="/' . $page . '">' . $page . '</a></li>';
+            $this->array_nav['main'][] = '<li class="nav-item"><a class="nav-link" href="/' . $page . '/">' . $page . '</a></li>';
         } elseif ($subgroup == NULL) {
-            $this->array_nav[$dropdown][] = '<a class="dropdown-item" href="/' . $page . '">' . $page . '</a>';
+            $this->array_nav[$dropdown][] = '<a class="dropdown-item" href="/' . $page . '/">' . $page . '</a>';
         } else {
-            $this->array_nav[$dropdown][$subgroup][] = '<a class="dropdown-item" href="/' . $page . '">' . $page . '</a>';
+            $this->array_nav[$dropdown][$subgroup][] = '<a class="dropdown-item" href="/' . $page . '/">' . $page . '</a>';
         }
     }
 

@@ -27,8 +27,8 @@ class Pages
     public function __construct()
     {
         $this->include_path = get_include_path();
-        $this->pages_path =  $_SERVER['INI']['pages_path'];
-        $this->default_page =  $_SERVER['INI']['site_default'];
+        $this->pages_path = $_SERVER['INI']['pages_path'];
+        $this->default_page = $_SERVER['INI']['site_default'];
         $this->indexPages();
     }
 
@@ -37,7 +37,7 @@ class Pages
         $dir = new RecursiveDirectoryIterator($this->include_path . $this->pages_path);
         $itr = new RecursiveIteratorIterator($dir);
         $rgx = new RegexIterator($itr, '/^.+\.php$/i', RecursiveRegexIterator::GET_MATCH);
-        
+
         $this->index_pages = array();
         foreach ($rgx as $name => $obj) {
             $page_path = str_replace($this->include_path, '', $name);

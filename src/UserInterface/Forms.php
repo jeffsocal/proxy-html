@@ -188,13 +188,13 @@ class Forms extends Input
     {
         $ui = new Action();
         
-        if (is_null($action))
-            $action = $ui->getVar('page');
+//         if (is_null($action))
+//             $action = $ui->getVar('page');
         
-        $action = $ui->getPageVariable($action);
+//         $action = $ui->getPageVariable($action);
         
         $htm = '<form 
-					 action=".?page=' . $action . '"
+					 action="./"
 					 method="' . $method . '">' . $inputs . '</form>';
         return $htm;
     }
